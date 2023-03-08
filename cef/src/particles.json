@@ -1,0 +1,12 @@
+{
+    "core": [
+        "bul_gravel_heli",
+        "ent_dst_concrete_large",
+        "bul_wood_splinter"
+    ],
+    "core_snow": [
+        "wheel_fric_snow",
+        "cs_mich1_spade_dirt_throw",
+        "scrape_snow"
+    ]
+}
