@@ -4,6 +4,7 @@ import App from './App.vue'
 import "./global.scss";
 import $ from "jquery";
 import 'animate.css';
+import "./slider.css"
 
 createApp(App)
     .use(createPinia())

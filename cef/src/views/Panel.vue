@@ -4,15 +4,33 @@
         left: typeof panelX === 'number' ? (panelX + 'px') : '',
         top: typeof panelY === 'number' ? (panelY + 'px') : ''
     }">
+
         <Header @mousedown.prevent.left="handleMouseDown" />
+
         <div style="margin-top: 1vw; margin-bottom:.5vw;"></div>
+
         <Search />
-        <div style="margin-top: 1vw; margin-bottom:.5vw;"></div>
+
+        <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
+
+        <div style="display:flex">
+            <Button @click="isPlaying = true" :color="isPlaying ? 'green' : ''" name="Play" />
+            <Button @click="isPlaying = false" :color="!isPlaying ? 'red' : ''" name="Stop" />
+        </div>
+
+        <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
+
         <Selector @on-left-clicked="onDictionaryLeft" @on-right-clicked="onDictionaryRight" :current-idx="dictionaryIdx"
             :max-idx="Object.keys(ParticlesJSON).length - 1" :current-name="DictionaryName" name="Dictionary" />
+
         <div style="margin-bottom:.5vw;"></div>
+
         <Selector :current-name="CurrentParticle" @on-left-clicked="onParticleLeft" @on-right-clicked="onParticleRight"
             :current-idx="particleIdx" :max-idx="DictionaryParticles.length - 1" name="Effect" />
+
+        <div style="margin-bottom:.5vw;"></div>
+
+        <Slider v-model:current-value="particleSize" :min-value="0.1" :max-value="15" />
     </div>
 </template>
 
@@ -20,12 +38,16 @@
 import Search from '../components/Search.vue';
 import Header from '../components/Header.vue';
 import Selector from '../components/Selector.vue';
+import Slider from "../components/Slider.vue";
+import Button from '../components/Button.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import ParticlesJSON from "../particles.json";
 
 const dictionaryIdx = ref(0);
 const particleIdx = ref(0);
+const particleSize = ref(1.0);
 const panelRef = ref<HTMLElement>();
+const isPlaying = ref(false);
 
 let isMoving = false;
 let offsetX = 0;
