@@ -1,9 +1,29 @@
 <template>
     <div class="search-parent">
         <i class="fa-solid fa-search"></i>
-        <input placeholder="Search" type="text">
+        <input v-model="localValue" placeholder="Search" type="text">
     </div>
 </template>
+
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+
+const props = defineProps({
+    currentValue: {
+        type: String,
+        required: true
+    }
+})
+
+const emit = defineEmits<{
+    (event: 'update:currentValue', payload: string): void;
+}>();
+
+const localValue = ref(props.currentValue);
+watch(localValue, (newValue) => {
+    emit('update:currentValue', newValue);
+});
+</script>
 
 <style lang="scss" scoped>
 $BACKGROUND_COLOR: rgb(36, 36, 36);

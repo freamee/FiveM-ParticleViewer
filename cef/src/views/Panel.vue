@@ -2,22 +2,30 @@
 <template>
     <Transition enterActiveClass="animate__animated animate__fadeIn animate__faster"
         leaveActiveClass="animate__animated animate__fadeOut animate__faster">
+
         <div v-if="isOpened" ref="panelRef" class="panel-parent" :style="{
             left: typeof panelX === 'number' ? (panelX + 'px') : '',
             top: typeof panelY === 'number' ? (panelY + 'px') : ''
         }">
 
-            <Header @on-close-click="isOpened = false" @mousedown.prevent.left="handleMouseDown" />
+            <Header header-name="Particle Viewer" @on-close-click="isOpened = false"
+                @mousedown.prevent.left="handleMouseDown" />
 
             <div style="margin-top: 1vw; margin-bottom:.5vw;"></div>
 
-            <Search />
+            <Search v-model:current-value="searchValue" />
 
             <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
 
             <div style="display:flex">
                 <Button @click="isPlaying = true" :color="isPlaying ? 'green' : ''" name="Play" />
                 <Button @click="isPlaying = false" :color="!isPlaying ? 'red' : ''" name="Stop" />
+            </div>
+
+            <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
+
+            <div class="simple-text">
+                Particles are in looped state, some of the particles can not be looped.
             </div>
 
             <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
@@ -33,6 +41,11 @@
             <div style="margin-bottom:.5vw;"></div>
 
             <Slider v-model:current-value="particleScale" :min-value="0.1" :max-value="15" />
+
+            <SearchPanel @on-particle-clicked="({ dictIdx, fxIdx }) => {
+                dictionaryIdx = dictIdx;
+                particleIdx = fxIdx;
+            }" :search-value="searchValue" />
         </div>
     </Transition>
 </template>
@@ -43,6 +56,7 @@ import Header from '../components/Header.vue';
 import Selector from '../components/Selector.vue';
 import Slider from "../components/Slider.vue";
 import Button from '../components/Button.vue';
+import SearchPanel from "../components/SearchPanel.vue";
 import { computed, onMounted, ref, watch } from 'vue';
 import ParticlesJSON from "../particles.json";
 import { AxiosInstance } from '../plugins/axios.plugin';
@@ -53,6 +67,7 @@ const particleScale = ref(1.0);
 const panelRef = ref<HTMLElement>();
 const isPlaying = ref(false);
 const isOpened = ref(false);
+const searchValue = ref("");
 
 let isMoving = false;
 let offsetX = 0;
@@ -64,6 +79,10 @@ const panelY = ref<number | null>(null);
 onMounted(() => {
     const savedX = localStorage.getItem("panelX");
     const savedY = localStorage.getItem("panelY");
+
+    if (import.meta.env.DEV) {
+        isOpened.value = true;
+    }
 
     if (savedX != null && savedY != null) {
         panelX.value = Number(savedX);
@@ -88,10 +107,6 @@ watch(isOpened, (newValue) => {
     });
 
     isPlaying.value = false;
-});
-
-watch(dictionaryIdx, (newDict) => {
-    particleIdx.value = 0;
 });
 
 watch(particleScale, (newValue) => {
@@ -123,11 +138,15 @@ watch(CurrentParticle, (newValue) => {
 function onDictionaryLeft() {
     if (dictionaryIdx.value - 1 < 0) return;
     dictionaryIdx.value--;
+
+    particleIdx.value = 0;
 }
 
 function onDictionaryRight() {
     if (dictionaryIdx.value + 1 > Object.keys(ParticlesJSON).length - 1) return;
     dictionaryIdx.value++;
+
+    particleIdx.value = 0;
 }
 
 function onParticleLeft() {
@@ -198,5 +217,13 @@ $PANEL_WIDTH: 13vw;
     padding: .85vw;
     top: 30%;
     left: 5%;
+}
+
+.simple-text {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: .7vw;
+    color: rgb(166, 166, 166);
 }
 </style>

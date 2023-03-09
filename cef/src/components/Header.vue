@@ -1,12 +1,12 @@
 <template>
     <div class="header-parent">
-        <MacButtons @on-close-click="emit('onCloseClick')" :is-left="true" />
+        <MacButtons v-if="hasButtons" @on-close-click="emit('onCloseClick')" :is-left="true" />
 
         <div class="header-name">
-            Particle Viewer
+            {{ headerName }}
         </div>
 
-        <div class="header-logo"></div>
+        <div v-if="hasLogo" class="header-logo"></div>
     </div>
 </template>
 
@@ -14,6 +14,21 @@
 import MacButtons from './MacButtons.vue';
 
 const emit = defineEmits(["onCloseClick"])
+
+defineProps({
+    headerName: {
+        type: String,
+        required: true
+    },
+    hasButtons: {
+        type: Boolean,
+        default: true
+    },
+    hasLogo: {
+        type: Boolean,
+        default: true
+    }
+})
 
 </script>
 
