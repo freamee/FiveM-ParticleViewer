@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import VueSlider from 'vue-3-slider-component'
 
 const props = defineProps({
@@ -34,10 +34,14 @@ const emit = defineEmits<{
     (event: 'update:currentValue', payload: number): void;
 }>();
 
-const localValue = ref(props.currentValue);
-watch(localValue, (newValue) => {
-    emit('update:currentValue', newValue);
-});
+const localValue = computed({
+    get() {
+        return props.currentValue;
+    },
+    set(value) {
+        emit('update:currentValue', value);
+    }
+})
 
 </script>
 

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps({
     currentValue: {
@@ -19,10 +19,15 @@ const emit = defineEmits<{
     (event: 'update:currentValue', payload: string): void;
 }>();
 
-const localValue = ref(props.currentValue);
-watch(localValue, (newValue) => {
-    emit('update:currentValue', newValue);
-});
+const localValue = computed({
+    get() {
+        return props.currentValue;
+    },
+    set(value) {
+        emit('update:currentValue', value);
+    }
+})
+
 </script>
 
 <style lang="scss" scoped>

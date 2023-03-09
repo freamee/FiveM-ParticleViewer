@@ -40,12 +40,14 @@
 
             <div style="margin-bottom:.5vw;"></div>
 
-            <Slider v-model:current-value="particleScale" :min-value="0.1" :max-value="15" />
+            <Slider v-model:current-value="particleScale" :min-value="minScale" :max-value="maxScale" />
 
             <SearchPanel @on-particle-clicked="({ dictIdx, fxIdx }) => {
                 dictionaryIdx = dictIdx;
                 particleIdx = fxIdx;
             }" :search-value="searchValue" />
+
+            <div style="margin-top: .5vw;"></div>
         </div>
     </Transition>
 </template>
@@ -68,6 +70,9 @@ const panelRef = ref<HTMLElement>();
 const isPlaying = ref(false);
 const isOpened = ref(false);
 const searchValue = ref("");
+
+const minScale = 0.1;
+const maxScale = 15.0;
 
 let isMoving = false;
 let offsetX = 0;
@@ -110,6 +115,13 @@ watch(isOpened, (newValue) => {
 });
 
 watch(particleScale, (newValue) => {
+    if (newValue > maxScale) {
+        particleScale.value = maxScale;
+    }
+    else if (newValue < minScale) {
+        particleScale.value = minScale;
+    }
+
     AxiosInstance.post("CHANGE_PARTICLE_SCALE", {
         scale: newValue
     })
@@ -198,6 +210,34 @@ function handleMouseMove(ev: MouseEvent) {
 window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data.message = "SET_OPEN_STATE") {
         isOpened.value = ev.data.state;
+    }
+});
+
+window.addEventListener("keyup", (ev: KeyboardEvent) => {
+    const key = ev.key.toLowerCase();
+
+    switch (key) {
+        case 'escape':
+            isOpened.value = false;
+            break;
+        case 'q':
+            onDictionaryLeft();
+            break;
+        case 'e':
+            onDictionaryRight();
+            break;
+        case 'arrowleft':
+            onParticleLeft();
+            break;
+        case 'arrowright':
+            onParticleRight();
+            break;
+        case 'arrowup':
+            particleScale.value = Number((particleScale.value + 0.1).toFixed(1));
+            break;
+        case 'arrowdown':
+            particleScale.value = Number((particleScale.value - 0.1).toFixed(1));
+            break;
     }
 });
 
