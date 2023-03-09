@@ -8,5 +8,8 @@
         "wheel_fric_snow",
         "cs_mich1_spade_dirt_throw",
         "scrape_snow"
+    ],
+    "scr_carwash": [
+        "ent_amb_car_wash_jet"
     ]
 }

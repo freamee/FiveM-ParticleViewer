@@ -1,6 +1,6 @@
 <template>
     <div class="header-parent">
-        <MacButtons :is-left="true" />
+        <MacButtons @on-close-click="emit('onCloseClick')" :is-left="true" />
 
         <div class="header-name">
             Particle Viewer
@@ -12,6 +12,8 @@
 
 <script lang="ts" setup>
 import MacButtons from './MacButtons.vue';
+
+const emit = defineEmits(["onCloseClick"])
 
 </script>
 

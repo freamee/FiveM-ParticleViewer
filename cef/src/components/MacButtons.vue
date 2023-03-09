@@ -1,7 +1,7 @@
 <template>
     <div class="mac-buttons-parent">
 
-        <div @click.left.prevent="onClick" @mouseenter="mouseEnter" class="close-button" :style="{
+        <div @click.left.prevent="onCloseClick" @mouseenter="mouseEnter" class="close-button" :style="{
             left: isLeft ? '0' : '',
             right: !isLeft ? '0' : ''
         }">
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { declineSound, hoverSound } from '../plugins/audio.plugin';
 
-const emit = defineEmits(["click"])
+const emit = defineEmits(["onCloseClick"])
 
 defineProps({
     isLeft: {
@@ -27,10 +27,9 @@ function mouseEnter() {
     hoverSound();
 }
 
-function onClick() {
+function onCloseClick() {
     declineSound();
-
-    emit("click");
+    emit("onCloseClick");
 }
 
 </script>
