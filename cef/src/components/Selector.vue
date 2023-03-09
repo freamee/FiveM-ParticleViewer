@@ -5,10 +5,10 @@
         <div class="selector-column-child">
             <div class="selector-name">[ {{ name }} ]</div>
             <div class="selector-count">{{ currentIdx }} / {{ maxIdx }}</div>
-            <Transition leaveActiveClass="animate__animated animate__fadeOutRight animate__faster"
-                enterActiveClass="animate__animated animate__fadeInLeft animate__faster" mode="out-in">
-                <div class="selector-current" :key="currentName">{{ currentName }}</div>
-            </Transition>
+            <!-- <Transition leaveActiveClass="animate__animated animate__fadeOutRight animate__faster" -->
+            <!-- enterActiveClass="animate__animated animate__fadeInLeft animate__faster" mode="out-in"> -->
+            <div class="selector-current" :key="currentName">{{ currentName }}</div>
+            <!-- </Transition> -->
         </div>
 
         <i @click.prevent.left="emit('onRightClicked')" class="fa-solid fa-chevron-right"></i>
