@@ -7,8 +7,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-
-
 const props = defineProps<{
     labelKey: string;
     valueKey: string;
