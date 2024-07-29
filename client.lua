@@ -79,8 +79,8 @@ function ParticleViewer:UpdateColor()
     if not self.isPlaying then return end
 
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
-        SetParticleFxLoopedColour(self.ParticleHandle, self.Data.Color.r, self.Data.Color.g, self.Data.Color.b, false);
-		SetParticleFxLoopedAlpha(self.ParticleHandle, self.Data.Color.a);
+        SetParticleFxLoopedColour(self.ParticleHandle, tonumber(self.Data.Color.r) + 0.0, tonumber(self.Data.Color.g) + 0.0, tonumber(self.Data.Color.b) + 0.0, false);
+		SetParticleFxLoopedAlpha(self.ParticleHandle, tonumber(self.Data.Color.a) + 0.0);
     end
 end
 
