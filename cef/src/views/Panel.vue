@@ -37,6 +37,8 @@
                 particleIdx = fxIdx;
             }" :search-value="searchValue" />
 
+            <EvolutionPanel></EvolutionPanel>
+
             <div style="margin-top: .5vw;"></div>
         </div>
     </Transition>
@@ -50,6 +52,7 @@ import Slider from "../components/Slider.vue";
 import Button from '../components/Button.vue';
 import ColorPicker from '../components/ColorPicker.vue';
 import SearchPanel from "../components/SearchPanel.vue";
+import EvolutionPanel from '../components/EvolutionPanel.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import ParticlesJSON from "../particles.json";
 import { AxiosInstance } from '../plugins/axios.plugin';

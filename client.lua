@@ -11,6 +11,7 @@ ParticleViewer.Data.Fx = nil
 ---@type number
 ParticleViewer.Data.Scale = nil
 ParticleViewer.Data.Color = nil
+ParticleViewer.Data.Evolution = {};
 
 function ParticleViewer:Stop()
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
@@ -84,6 +85,17 @@ function ParticleViewer:UpdateColor()
     end
 end
 
+function ParticleViewer:UpdateEvolution()
+    if not self.isPlaying then return end
+
+    if DoesParticleFxLoopedExist(self.ParticleHandle) then
+		for k, v in pairs(self.Data.Evolution) do
+			print(("Set evolution: %s = %s"):format(k, v))
+			SetParticleFxLoopedEvolution(self.ParticleHandle, k, tonumber(v) + 0.0, false);
+		end
+    end
+end
+
 function ParticleViewer:Open()
     SendNUIMessage({
         event = "SET_OPEN_STATE",
@@ -134,6 +146,11 @@ end)
 RegisterNUICallback("CHANGE_PARTICLE_COLOR", function(data, cb)
     ParticleViewer.Data.Color = data.color
     ParticleViewer:UpdateColor()
+    cb({})
+end)
+RegisterNUICallback("CHANGE_EVOLUTION_PROPERTY", function(data, cb)
+    ParticleViewer.Data.Evolution[data.name] = data.value;
+    ParticleViewer:UpdateEvolution();
     cb({})
 end)
 RegisterNUICallback("SET_CURSOR_STATE", function(data, cb)

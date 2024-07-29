@@ -1,9 +1,9 @@
 <template>
     <div class="slider-parent">
-        <div class="slider-name">Particle Scale</div>
+        <div class="slider-name" v-if="title">{{ title }}</div>
 
         <div class="slider-content">
-            <VueSlider width="90%" height="0.4vw" tooltip="none" :adsorb="true" :interval="0.1" :max="15" :min="0.1"
+            <VueSlider width="90%" height="0.4vw" tooltip="none" :adsorb="true" :interval="step" :max="max" :min="min"
                 class="slider" v-model="localValue" />
         </div>
 
@@ -16,30 +16,39 @@ import { computed, ref, watch } from 'vue';
 import VueSlider from 'vue-3-slider-component'
 
 const props = defineProps({
-    minValue: {
+    title: {
+        type: String,
+        required: false
+    },
+    min: {
         type: Number,
         required: true
     },
-    maxValue: {
+    max: {
         type: Number,
         required: true
     },
-    currentValue: {
+    step: {
+        type: Number,
+        required: false,
+        default: 0.1
+    },
+    value: {
         type: Number,
         required: true
     }
 })
 
 const emit = defineEmits<{
-    (event: 'update:currentValue', payload: number): void;
+    (event: 'update:value', payload: number): void;
 }>();
 
 const localValue = computed({
     get() {
-        return props.currentValue;
+        return props.value;
     },
     set(value) {
-        emit('update:currentValue', value);
+        emit('update:value', value);
     }
 })
 
