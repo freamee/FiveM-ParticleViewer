@@ -10,3 +10,4 @@ declare module "*.css";
 declare module "*.mp3";
 declare module "*.wav";
 declare module "vue-3-slider-component";
+declare module "verte-vue3";

@@ -18,6 +18,7 @@
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
     "v-click-outside": "^3.2.0",
+    "verte-vue3": "^1.1.1",
     "vue": "^3.2.45",
     "vue-3-slider-component": "^0.1.0"
   },
