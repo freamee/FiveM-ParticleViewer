@@ -51,6 +51,9 @@ function ParticleViewer:Play()
             false,
             false
         )
+
+		ParticleViewer:UpdateColor();
+		ParticleViewer:UpdateEvolution();
     end
 end
 
