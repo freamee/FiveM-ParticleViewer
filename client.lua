@@ -79,7 +79,6 @@ function ParticleViewer:UpdateColor()
     if not self.isPlaying then return end
 
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
-		print(self.Data.Color.r, self.Data.Color.g, self.Data.Color.b,  self.Data.Color.a)
         SetParticleFxLoopedColour(self.ParticleHandle, self.Data.Color.r, self.Data.Color.g, self.Data.Color.b, false);
 		SetParticleFxLoopedAlpha(self.ParticleHandle, self.Data.Color.a);
     end
@@ -90,7 +89,6 @@ function ParticleViewer:UpdateEvolution()
 
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
 		for k, v in pairs(self.Data.Evolution) do
-			print(("Set evolution: %s = %s"):format(k, v))
 			SetParticleFxLoopedEvolution(self.ParticleHandle, k, tonumber(v) + 0.0, false);
 		end
     end

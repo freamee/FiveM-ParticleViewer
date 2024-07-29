@@ -135,8 +135,6 @@ watch(particleColor, (newValue) => {
         color.a = !isNaN(result[4]) ? result[4]: 1.0;
     }
 
-    console.log(result, color);
-
     AxiosInstance.post("CHANGE_PARTICLE_COLOR", { color });
 });
 

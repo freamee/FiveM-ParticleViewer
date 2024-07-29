@@ -39,7 +39,6 @@ const localValue = computed({
         return props.currentValue;
     },
     set(value) {
-        console.info(value);
         emit('update:currentValue', value);
     }
 })
