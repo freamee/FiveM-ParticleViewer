@@ -11,41 +11,33 @@
             <Header header-name="Particle Viewer" @on-close-click="isOpened = false"
                 @mousedown.prevent.left="handleMouseDown" />
 
-            <div style="margin-top: 1vw; margin-bottom:.5vw;"></div>
-
             <Search v-model:current-value="searchValue" />
-
-            <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
 
             <div style="display:flex">
                 <Button @click="isPlaying = true" :color="isPlaying ? 'green' : ''" name="Play" />
                 <Button @click="isPlaying = false" :color="!isPlaying ? 'red' : ''" name="Stop" />
             </div>
 
-            <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
-
             <div class="simple-text">
                 Particles are in looped state, some of the particles can not be looped.
             </div>
 
-            <div style="margin-top: .5vw; margin-bottom:.5vw;"></div>
-
             <Selector @on-left-clicked="onDictionaryLeft" @on-right-clicked="onDictionaryRight" :current-idx="dictionaryIdx"
                 :max-idx="Object.keys(ParticlesJSON).length - 1" :current-name="DictionaryName" name="Dictionary" />
-
-            <div style="margin-bottom:.5vw;"></div>
 
             <Selector :current-name="CurrentParticle" @on-left-clicked="onParticleLeft" @on-right-clicked="onParticleRight"
                 :current-idx="particleIdx" :max-idx="DictionaryParticles.length - 1" name="Effect" />
 
-            <div style="margin-bottom:.5vw;"></div>
+            <Slider v-model:value="particleScale" :min="minScale" :max="maxScale" title="Particle Scale" />
 
-            <Slider v-model:current-value="particleScale" :min-value="minScale" :max-value="maxScale" />
+            <ColorPicker v-model:current-value="particleColor" title="Particle Color"></ColorPicker>
 
             <SearchPanel @on-particle-clicked="({ dictIdx, fxIdx }) => {
                 dictionaryIdx = dictIdx;
                 particleIdx = fxIdx;
             }" :search-value="searchValue" />
+
+            <EvolutionPanel></EvolutionPanel>
 
             <div style="margin-top: .5vw;"></div>
         </div>
@@ -58,7 +50,9 @@ import Header from '../components/Header.vue';
 import Selector from '../components/Selector.vue';
 import Slider from "../components/Slider.vue";
 import Button from '../components/Button.vue';
+import ColorPicker from '../components/ColorPicker.vue';
 import SearchPanel from "../components/SearchPanel.vue";
+import EvolutionPanel from '../components/EvolutionPanel.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import ParticlesJSON from "../particles.json";
 import { AxiosInstance } from '../plugins/axios.plugin';
@@ -66,6 +60,8 @@ import { AxiosInstance } from '../plugins/axios.plugin';
 const dictionaryIdx = ref(0);
 const particleIdx = ref(0);
 const particleScale = ref(1.0);
+const particleColor = ref('rgba(255, 255, 255, 1)');
+
 const panelRef = ref<HTMLElement>();
 const isPlaying = ref(false);
 const isOpened = ref(false);
@@ -86,7 +82,7 @@ onMounted(() => {
     const savedY = localStorage.getItem("panelY");
 
     if (import.meta.env.DEV) {
-        isOpened.value = true;
+      isOpened.value = true;
     }
 
     if (savedX != null && savedY != null) {
@@ -125,6 +121,21 @@ watch(particleScale, (newValue) => {
     AxiosInstance.post("CHANGE_PARTICLE_SCALE", {
         scale: newValue
     })
+});
+
+watch(particleColor, (newValue) => {
+    const color: { r: number, g: number, b: number, a: number } = { r: 255, g: 255, b: 255, a: 1.0 };
+    const pattern = /rgba?\((\d{1,3}),(\d{1,3}),(\d{1,3}),?(?:|(\d{1}\.?\d{0,2}))\)/;
+    const result = pattern.exec(newValue)?.map(i => Number(i));
+
+    if (result?.length && result.length >= 4) {
+        color.r = result[1] / 255;
+        color.g = result[2] / 255;
+        color.b = result[3] / 255;
+        color.a = isNaN(result[4]) ? 1.0 : result[4];
+    }
+
+    AxiosInstance.post("CHANGE_PARTICLE_COLOR", { color });
 });
 
 const DictionaryName = computed(() => {
@@ -257,6 +268,10 @@ $PANEL_WIDTH: 13vw;
     padding: .85vw;
     top: 30%;
     left: 5%;
+
+    display: flex;
+    flex-direction: column;
+    gap: .5vw;
 }
 
 .simple-text {

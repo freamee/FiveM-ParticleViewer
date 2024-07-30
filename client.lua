@@ -10,6 +10,8 @@ ParticleViewer.Data.Dictionary = nil
 ParticleViewer.Data.Fx = nil
 ---@type number
 ParticleViewer.Data.Scale = nil
+ParticleViewer.Data.Color = nil
+ParticleViewer.Data.Evolution = {};
 
 function ParticleViewer:Stop()
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
@@ -49,6 +51,9 @@ function ParticleViewer:Play()
             false,
             false
         )
+
+		ParticleViewer:UpdateColor();
+		ParticleViewer:UpdateEvolution();
     end
 end
 
@@ -70,6 +75,25 @@ function ParticleViewer:UpdateScale()
 
     if DoesParticleFxLoopedExist(self.ParticleHandle) then
         SetParticleFxLoopedScale(self.ParticleHandle, tonumber(self.Data.Scale) + 0.0)
+    end
+end
+
+function ParticleViewer:UpdateColor()
+    if not self.isPlaying then return end
+
+    if DoesParticleFxLoopedExist(self.ParticleHandle) then
+        SetParticleFxLoopedColour(self.ParticleHandle, tonumber(self.Data.Color.r) + 0.0, tonumber(self.Data.Color.g) + 0.0, tonumber(self.Data.Color.b) + 0.0, false);
+		SetParticleFxLoopedAlpha(self.ParticleHandle, tonumber(self.Data.Color.a) + 0.0);
+    end
+end
+
+function ParticleViewer:UpdateEvolution()
+    if not self.isPlaying then return end
+
+    if DoesParticleFxLoopedExist(self.ParticleHandle) then
+		for k, v in pairs(self.Data.Evolution) do
+			SetParticleFxLoopedEvolution(self.ParticleHandle, k, tonumber(v) + 0.0, false);
+		end
     end
 end
 
@@ -106,6 +130,7 @@ RegisterNUICallback("SET_PARTICLE_DATA_ON_MOUNTED", function(data, cb)
     ParticleViewer.Data.Dictionary = data.dictionary
     ParticleViewer.Data.Fx = data.particleFx
     ParticleViewer.Data.Scale = data.scale
+	ParticleViewer.Data.Color = { r = 1.0, g = 1.0, b = 1.0, a = 1.0 }
     cb({})
 end)
 RegisterNUICallback("CHANGE_PARTICLE", function(data, cb)
@@ -117,6 +142,16 @@ end)
 RegisterNUICallback("CHANGE_PARTICLE_SCALE", function(data, cb)
     ParticleViewer.Data.Scale = data.scale
     ParticleViewer:UpdateScale()
+    cb({})
+end)
+RegisterNUICallback("CHANGE_PARTICLE_COLOR", function(data, cb)
+    ParticleViewer.Data.Color = data.color
+    ParticleViewer:UpdateColor()
+    cb({})
+end)
+RegisterNUICallback("CHANGE_EVOLUTION_PROPERTY", function(data, cb)
+    ParticleViewer.Data.Evolution[data.name] = data.value;
+    ParticleViewer:UpdateEvolution();
     cb({})
 end)
 RegisterNUICallback("SET_CURSOR_STATE", function(data, cb)
